@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Inventory Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Trie + Segment Tree Based Web Application</p>
+          <h1>Smart Inventory Management System</h1>
+        </div>
+        <span class="badge">No Database Required</span>
+      </header>
+
+      <section class="stats-grid" aria-label="Inventory statistics">
+        <div class="stat-card">
+          <span class="stat-label">Total Products</span>
+          <strong id="totalProducts">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Sales</span>
+          <strong id="totalSales">₹0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Trie Matches</span>
+          <strong id="trieMatches">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Highest Sales</span>
+          <strong id="highestSales">0</strong>
+        </div>
+      </section>
+
+      <main class="main-grid">
+        <section class="card">
+          <h2>Product Search</h2>
+          <label class="search-input" for="searchInput">
+            <span class="search-icon">⌕</span>
+            <input id="searchInput" type="text" placeholder="Search products..." autocomplete="off" />
+          </label>
+          <p id="matchCount" class="match-count">Matches Found: 0</p>
+          <div id="searchResults" class="results-list" aria-live="polite"></div>
+        </section>
+
+        <section class="card">
+          <h2>Range Sales Analysis</h2>
+          <div class="field-row two-columns">
+            <div class="field-group">
+              <label for="startIndex">Start Index</label>
+              <input id="startIndex" type="number" min="0" value="1" />
+            </div>
+            <div class="field-group">
+              <label for="endIndex">End Index</label>
+              <input id="endIndex" type="number" min="0" value="4" />
+            </div>
+          </div>
+          <button id="calculateRangeBtn" class="primary-btn" type="button">Calculate Total</button>
+          <div id="rangeResult" class="result-box">Total Sales: ₹0</div>
+          <div id="rangeMessage" class="message" aria-live="polite"></div>
+        </section>
+
+        <section class="card">
+          <h2>Update Product Sales</h2>
+          <div class="field-group">
+            <label for="updateProductSelect">Product</label>
+            <select id="updateProductSelect"></select>
+          </div>
+          <div class="inline-metric">
+            <span>Current Sales</span>
+            <strong id="currentSalesValue">0</strong>
+          </div>
+          <div class="field-group">
+            <label for="newSalesInput">New Sales Value</label>
+            <input id="newSalesInput" type="number" min="0" step="1" value="0" />
+          </div>
+          <button id="updateSalesBtn" class="primary-btn" type="button">Update Sales</button>
+          <div id="updateMessage" class="message" aria-live="polite"></div>
+        </section>
+
+        <section class="card wide-card">
+          <h2>Data Structure Visualization</h2>
+          <div class="tab-group" role="tablist" aria-label="Data structure visualizations">
+            <button class="tab-btn active" type="button" data-tab="trie" role="tab" aria-selected="true">Trie Visualization</button>
+            <button class="tab-btn" type="button" data-tab="segment" role="tab" aria-selected="false">Segment Tree Visualization</button>
+          </div>
+
+          <div id="trieVisualizationPanel" class="visual-panel active">
+            <div class="legend">
+              <span><i class="dot active-dot"></i> Active path</span>
+              <span><i class="dot count-dot"></i> Prefix count</span>
+            </div>
+            <div id="trieTree" class="tree-container"></div>
+          </div>
+
+          <div id="segmentVisualizationPanel" class="visual-panel">
+            <div id="segmentTree" class="segment-tree"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Product Table</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Index</th>
+                  <th>Product Name</th>
+                  <th>Sales</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Add Product</h2>
+          <div class="field-group">
+            <label for="newProductName">Product Name</label>
+            <input id="newProductName" type="text" placeholder="Enter product name" />
+          </div>
+          <div class="field-group">
+            <label for="newProductSales">Sales</label>
+            <input id="newProductSales" type="number" min="0" step="1" placeholder="Enter sales" />
+          </div>
+          <button id="addProductBtn" class="primary-btn" type="button">Add Product</button>
+          <div id="addMessage" class="message" aria-live="polite"></div>
+          <p class="demo-note">Demo data is stored in browser memory and will reset when the page is refreshed.</p>
+        </section>
+
+        <section class="card">
+          <h2>Delete Product</h2>
+          <div class="field-group">
+            <label for="deleteProductSelect">Select Product</label>
+            <select id="deleteProductSelect"></select>
+          </div>
+          <button id="deleteProductBtn" class="danger-btn" type="button">Delete Product</button>
+          <div id="deleteMessage" class="message" aria-live="polite"></div>
+        </section>
+
+        <section class="card full-width">
+          <h2>How the Data Structures Work</h2>
+          <div class="info-grid">
+            <article>
+              <h3>Trie</h3>
+              <p>
+                Trie is used for efficient prefix-based searching. Each character is stored as a node,
+                allowing the system to quickly find products beginning with a particular prefix.
+              </p>
+            </article>
+            <article>
+              <h3>Segment Tree</h3>
+              <p>
+                Segment Tree is used for efficient range queries and updates. It allows the system to
+                calculate total sales for a range of products without scanning every element.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="card full-width">
+          <h2>Complexity</h2>
+          <div class="complexity-box">
+            <div class="complexity-item">
+              <span>Trie insertion:</span>
+              <strong>O(L)</strong>
+            </div>
+            <div class="complexity-item">
+              <span>Trie prefix search:</span>
+              <strong>O(P + K)</strong>
+            </div>
+            <div class="complexity-item">
+              <span>Segment Tree range query:</span>
+              <strong>O(log n)</strong>
+            </div>
+            <div class="complexity-item">
+              <span>Segment Tree update:</span>
+              <strong>O(log n)</strong>
+            </div>
+          </div>
+          <p class="complexity-note">
+            L = length of the word, P = length of the prefix, K = number of matching results. These costs
+            make trie and segment tree suitable for instant search and efficient range calculations.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
