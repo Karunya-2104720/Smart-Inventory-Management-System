@@ -366,7 +366,6 @@ const ui = {
   updateMessage: document.getElementById("updateMessage"),
   totalProducts: document.getElementById("totalProducts"),
   totalSales: document.getElementById("totalSales"),
-  trieMatches: document.getElementById("trieMatches"),
   highestSales: document.getElementById("highestSales"),
   productTableBody: document.getElementById("productTableBody"),
   newProductName: document.getElementById("newProductName"),
@@ -407,10 +406,17 @@ function setMessage(element, text, type) {
 }
 
 function renderStats() {
-  ui.totalProducts.textContent = String(productManager.getTotalProducts());
-  ui.totalSales.textContent = formatCurrency(productManager.getTotalSales());
-  ui.trieMatches.textContent = String(productManager.getMatchingProducts(ui.searchInput.value).length);
-  ui.highestSales.textContent = formatCurrency(productManager.getHighestSales());
+  if (ui.totalProducts) {
+    ui.totalProducts.textContent = String(productManager.getTotalProducts());
+  }
+
+  if (ui.totalSales) {
+    ui.totalSales.textContent = formatCurrency(productManager.getTotalSales());
+  }
+
+  if (ui.highestSales) {
+    ui.highestSales.textContent = formatCurrency(productManager.getHighestSales());
+  }
 }
 
 function renderSearchResults() {
