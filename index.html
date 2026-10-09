@@ -95,6 +95,7 @@
             <div class="legend">
               <span><i class="dot active-dot"></i> Active path</span>
               <span><i class="dot count-dot"></i> Prefix count</span>
+              <span><strong>*</strong> End of word</span>
             </div>
             <div id="trieTree" class="tree-container"></div>
           </div>
@@ -121,30 +122,32 @@
           </div>
         </section>
 
-        <section class="card">
-          <h2>Add Product</h2>
-          <div class="field-group">
-            <label for="newProductName">Product Name</label>
-            <input id="newProductName" type="text" placeholder="Enter product name" />
-          </div>
-          <div class="field-group">
-            <label for="newProductSales">Sales</label>
-            <input id="newProductSales" type="number" min="0" step="1" placeholder="Enter sales" />
-          </div>
-          <button id="addProductBtn" class="primary-btn" type="button">Add Product</button>
-          <div id="addMessage" class="message" aria-live="polite"></div>
-          <p class="demo-note">Demo data is stored in browser memory and will reset when the page is refreshed.</p>
-        </section>
+        <div class="product-actions-grid">
+          <section class="card">
+            <h2>Add Product</h2>
+            <div class="field-group">
+              <label for="newProductName">Product Name</label>
+              <input id="newProductName" type="text" placeholder="Enter product name" />
+            </div>
+            <div class="field-group">
+              <label for="newProductSales">Sales</label>
+              <input id="newProductSales" type="number" min="0" step="1" placeholder="Enter sales" />
+            </div>
+            <button id="addProductBtn" class="primary-btn" type="button">Add Product</button>
+            <div id="addMessage" class="message" aria-live="polite"></div>
+            <p class="demo-note">Demo data is stored in browser memory and will reset when the page is refreshed.</p>
+          </section>
 
-        <section class="card">
-          <h2>Delete Product</h2>
-          <div class="field-group">
-            <label for="deleteProductSelect">Select Product</label>
-            <select id="deleteProductSelect"></select>
-          </div>
-          <button id="deleteProductBtn" class="danger-btn" type="button">Delete Product</button>
-          <div id="deleteMessage" class="message" aria-live="polite"></div>
-        </section>
+          <section class="card">
+            <h2>Delete Product</h2>
+            <div class="field-group">
+              <label for="deleteProductSelect">Select Product</label>
+              <select id="deleteProductSelect"></select>
+            </div>
+            <button id="deleteProductBtn" class="danger-btn" type="button">Delete Product</button>
+            <div id="deleteMessage" class="message" aria-live="polite"></div>
+          </section>
+        </div>
 
         <section class="card full-width">
           <h2>How the Data Structures Work</h2>

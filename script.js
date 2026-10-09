@@ -530,8 +530,26 @@ function renderTrieVisualization() {
   let leafPosition = 0;
   let maxDepth = 0;
 
+  const getVisibleChildren = (node) => {
+    const visibleChildren = [];
+    const collectChildren = (currentNode, skippedCharacters = "") => {
+      const entries = Object.entries(currentNode.children).sort(([left], [right]) => left.localeCompare(right));
+      entries.forEach(([character, childNode]) => {
+        const pathSegment = skippedCharacters + character;
+        if (character === " ") {
+          collectChildren(childNode, pathSegment);
+        } else {
+          visibleChildren.push({ node: childNode, pathSegment });
+        }
+      });
+    };
+
+    collectChildren(node);
+    return visibleChildren;
+  };
+
   const layoutNode = (node, prefix, depth, parent) => {
-    const childEntries = Object.entries(node.children).sort(([left], [right]) => left.localeCompare(right));
+    const childEntries = getVisibleChildren(node);
     const positionedNode = {
       node,
       prefix,
@@ -552,8 +570,8 @@ function renderTrieVisualization() {
       return positionedNode.x;
     }
 
-    const childPositions = childEntries.map(([character, childNode]) =>
-      layoutNode(childNode, prefix + character, depth + 1, positionedNode)
+    const childPositions = childEntries.map(({ node: childNode, pathSegment }) =>
+      layoutNode(childNode, prefix + pathSegment, depth + 1, positionedNode)
     );
     positionedNode.x = (childPositions[0] + childPositions[childPositions.length - 1]) / 2;
     return positionedNode.x;
@@ -572,7 +590,7 @@ function renderTrieVisualization() {
   const nodeMarkup = nodes
     .map(({ node, prefix, x, y }) => {
       const isActive = prefix !== "" && activePrefix.startsWith(prefix);
-      const label = prefix === "" ? "Root" : prefix.slice(-1) === " " ? "␠" : prefix.slice(-1);
+      const label = prefix === "" ? "Root" : `${prefix.slice(-1)}${node.isEndOfWord ? "*" : ""}`;
       const nodeClass = isActive ? "trie-svg-node active" : "trie-svg-node";
       return `
         <g class="${nodeClass}" transform="translate(${x}, ${y})">
@@ -585,7 +603,7 @@ function renderTrieVisualization() {
     .join("");
 
   ui.trieTree.innerHTML = `
-    <svg class="trie-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Trie shown as a character tree">
+    <svg class="trie-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Trie shown as a character tree; asterisks mark word endings">
       <g>${edgeMarkup}</g>
       <g>${nodeMarkup}</g>
     </svg>
