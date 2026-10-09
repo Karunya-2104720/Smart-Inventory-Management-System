@@ -592,11 +592,14 @@ function renderTrieVisualization() {
       const isActive = prefix !== "" && activePrefix.startsWith(prefix);
       const label = prefix === "" ? "Root" : `${prefix.slice(-1)}${node.isEndOfWord ? "*" : ""}`;
       const nodeClass = isActive ? "trie-svg-node active" : "trie-svg-node";
+      const isRoot = prefix === "";
+      const countClass = isRoot ? "trie-count root-count" : "trie-count";
+      const countY = isRoot ? -31 : 34;
       return `
         <g class="${nodeClass}" transform="translate(${x}, ${y})">
           <circle r="${prefix === "" ? 23 : 19}"></circle>
           <text class="trie-character" text-anchor="middle" dominant-baseline="central">${escapeHtml(label)}</text>
-          <text class="trie-count" text-anchor="middle" y="34">count: ${node.count}</text>
+          <text class="${countClass}" text-anchor="middle" y="${countY}">count: ${node.count}</text>
         </g>
       `;
     })
@@ -612,21 +615,36 @@ function renderTrieVisualization() {
 
 function renderSegmentTreeVisualization() {
   const levels = productManager.segmentTree.getLevels();
+  const maxDepth = Math.max(
+    0,
+    ...levels.flatMap((level) => level.map((node) => Math.floor(Math.log2(node.index))))
+  );
+  const columnCount = 2 ** maxDepth;
+  const columnWidth = 86;
+
   ui.segmentTree.innerHTML = levels
     .map(
-      (level) => `
-        <div class="segment-level">
+      (level) => {
+        const depth = Math.floor(Math.log2(level[0].index));
+        const columnsPerNode = columnCount / (2 ** depth);
+
+        return `
+        <div class="segment-level" style="grid-template-columns: repeat(${columnCount}, minmax(0, 1fr)); min-width: max(100%, ${columnCount * columnWidth}px);">
           ${level
             .map(
-              (node) => `
-                <div class="segment-node ${productManager.segmentTree.lastQueryPath.has(node.index) ? "highlight" : ""}">
+              (node) => {
+                const columnStart = (node.index - (2 ** depth)) * columnsPerNode + 1;
+                return `
+                <div class="segment-node ${productManager.segmentTree.lastQueryPath.has(node.index) ? "highlight" : ""}" style="grid-column: ${columnStart} / span ${columnsPerNode};">
                   ${node.value}
                 </div>
-              `
+              `;
+              }
             )
             .join("")}
         </div>
-      `
+      `;
+      }
     )
     .join("");
 }
@@ -775,6 +793,17 @@ ui.productTableBody.addEventListener("click", (event) => {
   ui.updateProductSelect.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
+function updateVisualizationInfo(tab) {
+  const isTrieTab = tab === "trie";
+  document.getElementById("trieInfoContent").hidden = !isTrieTab;
+  document.getElementById("segmentInfoContent").hidden = isTrieTab;
+
+  const helpButton = document.getElementById("visualizationHelpButton");
+  const structureName = isTrieTab ? "Trie" : "Segment Tree";
+  helpButton.setAttribute("aria-label", `Show ${structureName} information`);
+  helpButton.title = `${structureName} information`;
+}
+
 document.querySelectorAll(".tab-btn").forEach((button) => {
   button.addEventListener("click", () => {
     const tab = button.dataset.tab;
@@ -789,6 +818,7 @@ document.querySelectorAll(".tab-btn").forEach((button) => {
     const segmentPanel = document.getElementById("segmentVisualizationPanel");
     triePanel.classList.toggle("active", tab === "trie");
     segmentPanel.classList.toggle("active", tab === "segment");
+    updateVisualizationInfo(tab);
   });
 });
 

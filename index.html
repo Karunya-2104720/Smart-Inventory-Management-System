@@ -85,13 +85,41 @@
         </section>
 
         <section class="card wide-card">
-          <h2>Data Structure Visualization</h2>
-          <div class="tab-group" role="tablist" aria-label="Data structure visualizations">
-            <button class="tab-btn active" type="button" data-tab="trie" role="tab" aria-selected="true">Trie Visualization</button>
-            <button class="tab-btn" type="button" data-tab="segment" role="tab" aria-selected="false">Segment Tree Visualization</button>
+          <div class="visualization-toolbar">
+            <div class="tab-group" role="tablist" aria-label="Data structure visualizations">
+              <button class="tab-btn active" type="button" data-tab="trie" role="tab" aria-selected="true">Trie Visualization</button>
+              <button class="tab-btn" type="button" data-tab="segment" role="tab" aria-selected="false">Segment Tree Visualization</button>
+            </div>
+            <details class="visualization-help">
+              <summary id="visualizationHelpButton" aria-label="Show Trie information" title="Trie information">
+                <span aria-hidden="true">i</span>
+              </summary>
+              <div class="visualization-info" role="region" aria-label="Visualization information">
+                <section id="trieInfoContent">
+                <h3>Trie</h3>
+                <p>Stores product names character by character for efficient prefix search. An asterisk marks the end of a word; the blue path shows the current search prefix. Counts show how many products pass through each node.</p>
+                <div class="complexity-box">
+                  <div class="complexity-item"><span>Trie insertion</span><strong>O(L)</strong></div>
+                  <div class="complexity-item"><span>Trie prefix search</span><strong>O(P + K)</strong></div>
+                </div>
+                <h3>Complexity</h3>
+                <p class="complexity-note">L = word length, P = prefix length, and K = number of matching products.</p>
+                </section>
+                <section id="segmentInfoContent" hidden>
+                  <h3>Segment Tree</h3>
+                  <p>Stores sales totals across product ranges. Use Range Sales Analysis to query a range; the highlighted nodes show which totals were used.</p>
+                  <h3>Complexity</h3>
+                  <div class="complexity-box">
+                  <div class="complexity-item"><span>Range query</span><strong>O(log n)</strong></div>
+                  <div class="complexity-item"><span>Sales update</span><strong>O(log n)</strong></div>
+                  </div>
+                  <p class="complexity-note">n = number of products in the inventory.</p>
+                </section>
+              </div>
+            </details>
           </div>
 
-          <div id="trieVisualizationPanel" class="visual-panel active">
+          <div id="trieVisualizationPanel" class="visual-panel trie-panel active">
             <div class="legend">
               <span><i class="dot active-dot"></i> Active path</span>
               <span><i class="dot count-dot"></i> Prefix count</span>
@@ -100,7 +128,7 @@
             <div id="trieTree" class="tree-container"></div>
           </div>
 
-          <div id="segmentVisualizationPanel" class="visual-panel">
+          <div id="segmentVisualizationPanel" class="visual-panel segment-panel">
             <div id="segmentTree" class="segment-tree"></div>
           </div>
         </section>
@@ -148,52 +176,6 @@
             <div id="deleteMessage" class="message" aria-live="polite"></div>
           </section>
         </div>
-
-        <section class="card full-width">
-          <h2>How the Data Structures Work</h2>
-          <div class="info-grid">
-            <article>
-              <h3>Trie</h3>
-              <p>
-                Trie is used for efficient prefix-based searching. Each character is stored as a node,
-                allowing the system to quickly find products beginning with a particular prefix.
-              </p>
-            </article>
-            <article>
-              <h3>Segment Tree</h3>
-              <p>
-                Segment Tree is used for efficient range queries and updates. It allows the system to
-                calculate total sales for a range of products without scanning every element.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section class="card full-width">
-          <h2>Complexity</h2>
-          <div class="complexity-box">
-            <div class="complexity-item">
-              <span>Trie insertion:</span>
-              <strong>O(L)</strong>
-            </div>
-            <div class="complexity-item">
-              <span>Trie prefix search:</span>
-              <strong>O(P + K)</strong>
-            </div>
-            <div class="complexity-item">
-              <span>Segment Tree range query:</span>
-              <strong>O(log n)</strong>
-            </div>
-            <div class="complexity-item">
-              <span>Segment Tree update:</span>
-              <strong>O(log n)</strong>
-            </div>
-          </div>
-          <p class="complexity-note">
-            L = length of the word, P = length of the prefix, K = number of matching results. These costs
-            make trie and segment tree suitable for instant search and efficient range calculations.
-          </p>
-        </section>
       </main>
     </div>
 
