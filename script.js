@@ -389,7 +389,7 @@ function escapeHtml(value) {
 }
 
 function formatCurrency(value) {
-  return `₹${Number(value).toLocaleString("en-IN")}`;
+  return Number(value).toLocaleString("en-IN");
 }
 
 function setMessage(element, text, type) {
@@ -632,25 +632,25 @@ ui.calculateRangeBtn.addEventListener("click", () => {
 
   if (!Number.isInteger(start) || !Number.isInteger(end)) {
     setMessage(ui.rangeMessage, "Please enter a valid range.", "error");
-    ui.rangeResult.textContent = "Total Sales: ₹0";
+    ui.rangeResult.textContent = "Total Sales: 0";
     return;
   }
 
   if (start < 0 || end < 0) {
     setMessage(ui.rangeMessage, "Invalid index.", "error");
-    ui.rangeResult.textContent = "Total Sales: ₹0";
+    ui.rangeResult.textContent = "Total Sales: 0";
     return;
   }
 
   if (start > end) {
     setMessage(ui.rangeMessage, "Start index must be less than or equal to end index.", "error");
-    ui.rangeResult.textContent = "Total Sales: ₹0";
+    ui.rangeResult.textContent = "Total Sales: 0";
     return;
   }
 
   if (start >= productManager.getTotalProducts() || end >= productManager.getTotalProducts()) {
     setMessage(ui.rangeMessage, "Invalid index.", "error");
-    ui.rangeResult.textContent = "Total Sales: ₹0";
+    ui.rangeResult.textContent = "Total Sales: 0";
     return;
   }
 
@@ -661,7 +661,7 @@ ui.calculateRangeBtn.addEventListener("click", () => {
     renderSegmentTreeVisualization();
   } catch (error) {
     setMessage(ui.rangeMessage, error.message, "error");
-    ui.rangeResult.textContent = "Total Sales: ₹0";
+    ui.rangeResult.textContent = "Total Sales: 0";
   }
 });
 
